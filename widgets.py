@@ -86,6 +86,12 @@ class NameReel(tk.Canvas):
 
         tick()
 
+    def set_longest(self, name: str) -> None:
+        """Informa o nome mais longo da lista para reajustar o tamanho da fonte."""
+        self._longest = name
+        self._fit_font()
+        self._render()
+
     def apply_theme(self) -> None:
         self._bg = theme.pick(theme.SURFACE)
         self.configure(bg=self._bg)
@@ -102,12 +108,7 @@ class NameReel(tk.Canvas):
 
     def _on_resize(self, event) -> None:
         self._cw = event.width
-        # Ajusta a fonte para que o nome mais longo sempre caiba.
-        margin = int(90 * self._scale)
-        for size in range(24, 11, -1):
-            self._font.configure(size=-int(size * self._scale))
-            if self._font.measure(self._longest) <= self._cw - margin:
-                break
+        self._fit_font()
         cy, half, m = self._ch / 2, self._row_h / 2, int(9 * self._scale)
         pad = int(22 * self._scale)
         self.coords(self._line_top, pad, cy - half, self._cw - pad, cy - half)
@@ -115,6 +116,14 @@ class NameReel(tk.Canvas):
         self.coords(self._mark_l, pad, cy - m, pad + m, cy, pad, cy + m)
         self.coords(self._mark_r, self._cw - pad, cy - m, self._cw - pad - m, cy, self._cw - pad, cy + m)
         self._render()
+
+    def _fit_font(self) -> None:
+        """Ajusta a fonte para que o nome mais longo sempre caiba."""
+        margin = int(90 * self._scale)
+        for size in range(24, 11, -1):
+            self._font.configure(size=-int(size * self._scale))
+            if self._font.measure(self._longest) <= self._cw - margin:
+                break
 
     def _render(self) -> None:
         cx, cy = self._cw / 2, self._ch / 2
