@@ -7,7 +7,6 @@ from datetime import datetime
 from tkinter import messagebox
 
 import customtkinter as ctk
-from PIL import Image
 
 import storage
 import theme
@@ -91,9 +90,6 @@ class SkipLevelApp(ctk.CTk):
 
         right = ctk.CTkFrame(header, fg_color="transparent")
         right.grid(row=0, column=2, sticky="e", padx=28)
-        logo = self._load_logo()
-        if logo is not None:
-            ctk.CTkLabel(right, text="", image=logo).pack(side="left", padx=(0, 22))
         self.theme_btn = ctk.CTkButton(
             right, text="Tema claro" if theme.is_dark() else "Tema escuro", width=112, height=32,
             corner_radius=16, font=theme.font(12, "bold"), fg_color="transparent", border_width=1,
@@ -190,24 +186,6 @@ class SkipLevelApp(ctk.CTk):
         return page
 
     # =============================================================== recursos
-    def _load_logo(self) -> ctk.CTkImage | None:
-        """Carrega o logotipo e gera uma versão branca para o cabeçalho azul."""
-        try:
-            src = Image.open(theme.resource_path("assets/logo.png")).convert("RGBA")
-        except OSError:
-            return None
-        alpha = src.getchannel("A")
-        if alpha.getextrema()[0] == 255:
-            # Imagem sem transparência (fundo preto): o brilho vira a máscara.
-            lum = Image.merge("RGB", src.split()[:3]).convert("L")
-            top = max(1, lum.getextrema()[1])
-            alpha = lum.point(lambda v: min(255, int(v * 255 / top)))
-        white = Image.new("RGBA", src.size, (255, 255, 255, 0))
-        white.putalpha(alpha)
-        height = 22
-        return ctk.CTkImage(light_image=white, dark_image=white,
-                            size=(round(src.width * height / src.height), height))
-
     def _set_icon(self) -> None:
         if sys.platform.startswith("win"):
             try:

@@ -14,7 +14,7 @@ Sorteio animado de 5 colaboradores a partir de uma lista editável (32 participa
 | `storage.py` | Salva lista, sorteados, histórico e preferências |
 | `data.py` | Lista original de participantes |
 | `theme.py` | Paleta, fontes e utilitários |
-| `assets/` | Logotipo e ícone |
+| `assets/` | Ícone do aplicativo |
 | `build.bat` | Gera o `.exe` no Windows |
 
 ## Instalação (Python 3.10+)
